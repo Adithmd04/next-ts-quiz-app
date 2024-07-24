@@ -2,21 +2,22 @@
 import React, { useState } from "react";
 import questions from "./quizdata";
 import Result from "./result";
+import { BTN_NEXT, BTN_SUBMIT, FALSE, TRUE } from "./constants";
 
 export default function Quizdatapassing() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState<string[]>(
     Array(questions.length).fill("")
   );
-  const [buttonText, setButtonText] = useState<string>("Next");
-  const [isSubmit, setIsSubmit] = useState(false);
+  const [buttonText, setButtonText] = useState<string>(BTN_NEXT);
+  const [isSubmit, setIsSubmit] = useState(FALSE);
 
   const handleNextQuestion = () => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
 
       if (currentQuestion === questions.length - 2) {
-        setButtonText("Submit");
+        setButtonText(BTN_SUBMIT);
       }
     } else {
       handleSubmit();
@@ -28,7 +29,7 @@ export default function Quizdatapassing() {
       setCurrentQuestion(currentQuestion - 1);
     }
     if (currentQuestion === questions.length - 1) {
-      setButtonText("Next");
+      setButtonText(BTN_NEXT);
     }
   };
 
@@ -43,7 +44,7 @@ export default function Quizdatapassing() {
   };
 
   const handleSubmit = () => {
-    setIsSubmit(true);
+    setIsSubmit(TRUE);
   };
 
   const questionIndex = questions[currentQuestion];

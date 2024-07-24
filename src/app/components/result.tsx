@@ -1,8 +1,10 @@
 import React from "react";
 import questions from "./quizdata";
+import { GOOD_EMOTE, TRY_EMOTE } from "./constants";
 
 export default function Result({ ...props }) {
   let count = 0;
+  let emote;
   function checkAnswers() {
     for (let i = 0; i < props.selectedOptions.length; i++) {
       if (props.selectedOptions[i] === questions[i].correct_answer) {
@@ -14,9 +16,11 @@ export default function Result({ ...props }) {
 
   function getDecoration() {
     if (count >= 3) {
-      return "GOOD JOB!";
+      emote = GOOD_EMOTE
+      return emote;
     }
-    return "Keep Trying!";
+    emote = TRY_EMOTE
+    return emote;
   }
 
   const message = getDecoration();
