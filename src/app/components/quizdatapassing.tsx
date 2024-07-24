@@ -11,6 +11,7 @@ export default function Quizdatapassing() {
   );
   const [buttonText, setButtonText] = useState<string>(BTN_NEXT);
   const [isSubmit, setIsSubmit] = useState(FALSE);
+  const [previousBtn, setPreviousBtn] = useState(false);
 
   const handleNextQuestion = () => {
     if (currentQuestion < questions.length - 1) {
@@ -25,6 +26,9 @@ export default function Quizdatapassing() {
   };
 
   const handlePreviousQuestion = () => {
+    if (currentQuestion == 0) {
+      setPreviousBtn(false);
+    }
     if (currentQuestion > 0) {
       setCurrentQuestion(currentQuestion - 1);
     }
@@ -47,6 +51,10 @@ export default function Quizdatapassing() {
     setIsSubmit(TRUE);
   };
 
+  const handleAlert = () => {
+    alert("Please Choose an Option!");
+  };
+
   const questionIndex = questions[currentQuestion];
   const allAnswers = [...questionIndex.incorrect_answers];
 
@@ -65,7 +73,7 @@ export default function Quizdatapassing() {
                 </div>
                 <div className="mt-1">
                   {allAnswers.map((answer, index) => (
-                    <div key={index}>
+                    <label key={index} className="block cursor-pointer">
                       <input
                         type="radio"
                         id={`answer${index}`}
@@ -73,25 +81,40 @@ export default function Quizdatapassing() {
                         value={answer}
                         checked={selectedOptions[currentQuestion] === answer}
                         onChange={handleSelectedOptions}
+                        className="mr-2"
                       />
-                      <label htmlFor={`answer-${index}`}>{answer}</label>
-                    </div>
+                      {answer}
+                    </label>
                   ))}
                 </div>
                 <div className="flex justify-between mt-4">
                   <button
-                    className="bg-[#ff0f0f] text-white py-2 px-4 rounded"
+                    className={`py-2 px-4 rounded ${
+                      currentQuestion === 0
+                        ? "bg-[#ff0f0f] text-white-500 opacity-50"
+                        : "bg-[#ff0f0f] text-white"
+                    }`}
                     onClick={handlePreviousQuestion}
                     disabled={currentQuestion === 0}
                   >
                     Previous
                   </button>
-                  <button
-                    className="bg-[#ff0f0f] text-white py-2 px-4 rounded"
-                    onClick={handleNextQuestion}
-                  >
-                    {buttonText}
-                  </button>
+                  {selectedOptions[currentQuestion] === "" ? (
+                    <button
+                      className="bg-[#ff0f0f] text-white py-2 px-4 rounded"
+                      onClick={handleAlert}
+                    >
+                      {buttonText}
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-[#ff0f0f] text-white py-2 px-4 rounded"
+                      onClick={handleNextQuestion}
+                      disabled={selectedOptions[currentQuestion] === ""}
+                    >
+                      {buttonText}
+                    </button>
+                  )}
                 </div>
               </>
             )}
