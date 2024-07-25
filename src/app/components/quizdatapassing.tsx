@@ -2,37 +2,45 @@
 import React, { useEffect, useState } from "react";
 import questions from "./quizdata";
 import Result from "./result";
-import { BTN_NEXT, BTN_SUBMIT, FALSE, TRUE } from "./constants";
+import { BTN_SUBMIT, TRUE } from "./constants";
+import { useReactiveVar } from "@apollo/client";
+import {
+  buttonTextVar,
+  currentQuestionVar,
+  makeSubmitVar,
+  timeLeftVar,
+} from "../utils/localState";
 
 export default function Quizdatapassing() {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const currentQus = useReactiveVar(currentQuestionVar);
+  const nextBtnText = useReactiveVar(buttonTextVar);
+  const isSubmit = useReactiveVar(makeSubmitVar);
+  const timmerValue = useReactiveVar(timeLeftVar);
+
   const [selectedOptions, setSelectedOptions] = useState<string[]>(
     Array(questions.length).fill("")
   );
-  const [buttonText, setButtonText] = useState<string>(BTN_NEXT);
-  const [isSubmit, setIsSubmit] = useState(FALSE);
-  const [timeLeft, setTimeLeft] = useState(7); 
 
   useEffect(() => {
-    if (timeLeft === 0) {
+    if (timmerValue === 0) {
       handleNextQuestion();
     }
     const timer = setInterval(() => {
-      setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+      timeLeftVar(timmerValue > 0 ? timmerValue - 1 : 0);
     }, 1000);
     return () => clearInterval(timer);
-  }, [timeLeft]);
+  }, [timmerValue]);
 
   useEffect(() => {
-    setTimeLeft(7);
-  }, [currentQuestion]);
+    timeLeftVar(7);
+  }, [currentQus]);
 
   const handleNextQuestion = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
+    if (currentQus < questions.length - 1) {
+      currentQuestionVar(currentQus + 1);
 
-      if (currentQuestion === questions.length - 2) {
-        setButtonText(BTN_SUBMIT);
+      if (currentQus === questions.length - 2) {
+        buttonTextVar(BTN_SUBMIT);
       }
     } else {
       handleSubmit();
@@ -44,20 +52,17 @@ export default function Quizdatapassing() {
     const selectedValue = e.target.value;
     setSelectedOptions((previousOptions) => {
       const updatedOptions = [...previousOptions];
-      updatedOptions[currentQuestion] = selectedValue;
+      updatedOptions[currentQus] = selectedValue;
       return updatedOptions;
     });
   };
 
   const handleSubmit = () => {
-    setIsSubmit(TRUE);
+    makeSubmitVar(TRUE);
   };
 
-  // const handleAlert = () => {
-  //   alert("Please Choose an Option!");
-  // };
 
-  const questionIndex = questions[currentQuestion];
+  const questionIndex = questions[currentQus];
   const allAnswers = [...questionIndex.incorrect_answers];
 
   return (
@@ -71,7 +76,7 @@ export default function Quizdatapassing() {
             ) : (
               <>
                 <div className="h-24 overflow-hidden text-lg font-semibold">
-                  {currentQuestion + 1}.{questionIndex.qus}
+                  {currentQus + 1}.{questionIndex.qus}
                 </div>
                 <div className="mt-1">
                   {allAnswers.map((answer, index) => (
@@ -81,7 +86,7 @@ export default function Quizdatapassing() {
                         id={`answer${index}`}
                         name="answer"
                         value={answer}
-                        checked={selectedOptions[currentQuestion] === answer}
+                        checked={selectedOptions[currentQus] === answer}
                         onChange={handleSelectedOptions}
                         className="mr-2"
                       />
@@ -92,21 +97,21 @@ export default function Quizdatapassing() {
                 <div className="flex justify-between items-center mt-4">
                   <div
                     className={`text-center text-lg font-semibold ${
-                      timeLeft > 5 ? "text-black" : "text-red-500"
+                      timmerValue > 5 ? "text-black" : "text-red-500"
                     }`}
                   >
-                    Time Remaining: {timeLeft}s
+                    Time Remaining: {timmerValue}s
                   </div>
                   <button
                     className={`bg-[#ff0f0f] text-white py-2 px-4 rounded ${
-                      selectedOptions[currentQuestion] === ""
+                      selectedOptions[currentQus] === ""
                         ? "cursor-not-allowed"
                         : "cursor-pointer"
                     }`}
                     onClick={handleNextQuestion}
-                    disabled={selectedOptions[currentQuestion] === ""}
+                    disabled={selectedOptions[currentQus] === ""}
                   >
-                    {buttonText}
+                    {nextBtnText}
                   </button>
                 </div>
               </>
