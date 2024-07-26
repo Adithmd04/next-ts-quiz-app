@@ -7,3 +7,5 @@ export const FALSE = false;
 
 export const GOOD_EMOTE = "Good Job!!";
 export const TRY_EMOTE = "Keep Trying!";
+
+export const TIME = 10;
