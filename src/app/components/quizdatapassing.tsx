@@ -61,7 +61,6 @@ export default function Quizdatapassing() {
     makeSubmitVar(TRUE);
   };
 
-
   const questionIndex = questions[currentQus];
   const allAnswers = [...questionIndex.incorrect_answers];
 
