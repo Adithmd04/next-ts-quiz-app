@@ -36,5 +36,5 @@ yarn-error.log*
 next-env.d.ts
 
 # added files
-quizdata.tsx
-quizdatapassing.tsx
+/components/quizdata.tsx
+/components/quizdatapassing.tsx
