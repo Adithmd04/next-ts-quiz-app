@@ -35,6 +35,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# added files
-/components/quizdata.tsx
-/components/quizdatapassing.tsx
+# Ignore specific file
+quiz-app/src/app/components/quizdata.tsx
+quiz-app/src/app/components/quizdatapassing.tsx
